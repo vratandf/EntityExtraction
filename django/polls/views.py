@@ -15,8 +15,7 @@ def index(request):
 
 def movies(request):
     graph = Graph()
-    remoteConn = DriverRemoteConnection('ws://vratan-neptune-imdb.cnm7ndf0yfno.us-west-2.neptune.amazonaws.com:8182/grem
-lin','g')
+    remoteConn = DriverRemoteConnection('ws://<path to neptune>:8182/gremlin','g')
     g = graph.traversal().withRemote(remoteConn)
     #print(g.V().limit(2).toList())
     myList = g.V().has('name', request.POST['actor_name']).out().limit(40).values().toList()
@@ -29,16 +28,13 @@ def joint_movies(request):
     statics.load_statics(globals())
     inputs = [x.strip() for x in request.POST['actor_names'].split(',')]
     graph = Graph()
-    remoteConn = DriverRemoteConnection('ws://vratan-neptune-imdb.cnm7ndf0yfno.us-west-2.neptune.amazonaws.com:8182/grem
-lin','g')
+    remoteConn = DriverRemoteConnection('ws://<path to neptune>:8182/gremlin','g')
     g = graph.traversal().withRemote(remoteConn)
     #print(g.V().limit(2).toList())
     if (len(inputs) == 2) :
-        myList = g.V().has('name',inputs[0]).repeat(out().where(__.in_().has('name',inputs[1]))).emit().values().toList(
-)
+        myList = g.V().has('name',inputs[0]).repeat(out().where(__.in_().has('name',inputs[1]))).emit().values().toList()
     else :
-        myList = g.V().has('name',inputs[0]).repeat(out().where(__.in_().has('name',inputs[1])).where(__.in_().has('name
-',inputs[2]))).emit().values().toList()
+        myList = g.V().has('name',inputs[0]).repeat(out().where(__.in_().has('name',inputs[1])).where(__.in_().has('name',inputs[2]))).emit().values().toList()
 
     remoteConn.close()
     #print(myList)
@@ -48,8 +44,7 @@ lin','g')
 
 def actors(request):
     graph = Graph()
-    remoteConn = DriverRemoteConnection('ws://vratan-neptune-imdb.cnm7ndf0yfno.us-west-2.neptune.amazonaws.com:8182/grem
-lin','g')
+    remoteConn = DriverRemoteConnection('ws://<path to neptune>:8182/gremlin','g')
     g = graph.traversal().withRemote(remoteConn)
     myList = g.V().has('title', request.POST['movie_name']).in_().limit(40).values().toList()
     remoteConn.close()
@@ -60,11 +55,9 @@ def separation(request):
     statics.load_statics(globals())
     inputs = [x.strip() for x in request.POST['actor_names'].split(',')]
     graph = Graph()
-    remoteConn = DriverRemoteConnection('ws://vratan-neptune-imdb.cnm7ndf0yfno.us-west-2.neptune.amazonaws.com:8182/grem
-lin','g')
+    remoteConn = DriverRemoteConnection('ws://<path to neptune>:8182/gremlin','g')
     g = graph.traversal().withRemote(remoteConn)
-    myList = g.V().has('name',inputs[0]).repeat(out().in_().simplePath()).until(has('name',inputs[1])).path().by('name')
-.by('title').limit(40).toList()
+    myList = g.V().has('name',inputs[0]).repeat(out().in_().simplePath()).until(has('name',inputs[1])).path().by('name').by('title').limit(40).toList()
     remoteConn.close()
     context = {'actors': request.POST['actor_names'], 'separation': myList}
     return render(request, 'polls/movie-results.html', context)
@@ -73,4 +66,3 @@ lin','g')
 def graphexp(request):
     context = {'action': 'show'}
     return render(request, 'polls/graphexp.html', context)
-
