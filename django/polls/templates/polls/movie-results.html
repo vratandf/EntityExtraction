@@ -1,0 +1,24 @@
+{% if actor %}
+    <p> {{ actor }} acted in (limit 40):</p>
+    <ul>
+    {% for movie in movies %}
+        <li>{{ movie }}</li>
+    {% endfor %}
+    </ul>
+
+{% elif movie %}
+    <p> {{ movie }} has the following actors (limit 40):</p>
+    <ul>
+    {% for actor in actors %}
+        <li>{{ actor }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p> {{ actors }} have the following connections (limit 40):</p>
+    <ul>
+    {% for sep in separation %}
+        <li>{{ sep }}</li>
+    {% endfor %}
+    </ul>
+{% endif %}
+
