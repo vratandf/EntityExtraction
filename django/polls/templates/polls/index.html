@@ -24,7 +24,6 @@
 <p></p>
 <form action="{% url 'polls:separation' %}" method="post">
 {% csrf_token %}
-  Enter any two actors (comma separated) and find the degrees of separation between them: <input type="text" name="actor
-_names"><br/>
+  Enter any two actors (comma separated) and find the degrees of separation between them: <input type="text" name="actor_names"><br/>
   <input type="submit" value="Submit">
 </form>
